@@ -8,7 +8,7 @@ permissions:
   contents: read
 
 env:
-  TF_WORKING_DIR: ./aks-infra/terraform
+  TF_WORKING_DIR: ./aks-todo-proj/env/dev/
   STORAGE_RG: "sabke-liye-rg"
   STORAGE_ACCOUNT: "tokri"
   CONTAINER_NAME: "tijori"
