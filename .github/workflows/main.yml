@@ -9,9 +9,9 @@ permissions:
 
 env:
   TF_WORKING_DIR: ./env/dev/
-  STORAGE_RG: "sabke-liye-rg"
-  STORAGE_ACCOUNT: "tokri"
-  CONTAINER_NAME: "tijori"
+  STORAGE_RG: "satya-rg"
+  STORAGE_ACCOUNT: "satyastoghf"
+  CONTAINER_NAME: "container"
   STATE_FILE: "aksinfra.tfstate"
 
 jobs:
