@@ -7,7 +7,6 @@ variable "kubernetes_clusters" {
 }
 
 variable "public_ips" {
-  
 }
 
 variable "virtual_networks" {
