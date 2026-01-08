@@ -1,7 +1,7 @@
 locals {
   common_tags = {
-    Env = "dev"
-    App = "todo-aks"
+    Env = "sandbox"
+    App = "12751"
   }
 }
 

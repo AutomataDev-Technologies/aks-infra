@@ -1,42 +1,42 @@
 resource_groups = {
   rg1 = {
-  name     = "satya-aks-rg"
-  location = "east us"
+  name     = "sazsatyaprakash-rg"
+  location = "West Europe"
   }
 }
 
 
 container_registries = {
   acr1 = {
-    name                = "satyaaksacrspsingh"
-    resource_group_name = "satya-aks-rg"
-    location            = "east us"
+    name                = "sazsatyaprakashacr"
+    resource_group_name = "sazsatyaprakash-rg"
+    location            = "West Europe"
     sku                 = "Standard"
   }
 }
 
 public_ips = {
   pip1 = {
-    name                = "satya-aks-pip"
-    resource_group_name = "satya-aks-rg"
-    location            = "east us"
+    name                = "sazsatyaprakash-pip"
+    resource_group_name = "sazsatyaprakash-rg"
+    location            = "West Europe"
     allocation_method   = "Static"
   }
 }
 
 virtual_networks = {
   vnet1 = {
-    name                = "satya-aks-vnet"
+    name                = "sazsatyaprakash-vnet"
     address_space       = ["10.0.0.0/16"]
-    location            = "east us"
-    resource_group_name = "satya-aks-rg"
+    location            = "West Europe"
+    resource_group_name = "sazsatyaprakash-rg"
     subnets = {
       subnet1 = {
-        name             = "satya-aks-subnet"
+        name             = "sazsatyaprakash-subnet"
         address_prefixes = ["10.0.1.0/24"]
       }
       subnet2 = {
-        name             = "appgw-subnet"
+        name             = "sazsatyaprakash-appgwsubnet"
         address_prefixes = ["10.0.2.0/24"]
       }
     }
@@ -45,9 +45,9 @@ virtual_networks = {
 
 application_gateways = {
   appgw1 = {
-    name                = "satya-aks-appgw"
-    resource_group_name = "satya-aks-rg"
-    location            = "east us"
+    name                = "sazsatyaprakash-appgw"
+    resource_group_name = "sazsatyaprakash-rg"
+    location            = "West Europe"
     sku = {
       name     = "Standard_v2"
       tier     = "Standard_v2"
@@ -56,11 +56,11 @@ application_gateways = {
 
     gateway_ip_configuration = {
       name        = "appgw-ipconfig"
-      subnet_name = "appgw-subnet"
+      subnet_name = "sazsatyaprakash-appgwsubnet"
     }
 
-    virtual_network_name = "satya-aks-vnet"
-    public_ip_name       = "satya-aks-pip"
+    virtual_network_name = "sazsatyaprakash-vnet"
+    public_ip_name       = "sazsatyaprakash-pip"
     frontend_ports = {
       port1 = {
         name = "frontendPort1"
@@ -111,19 +111,19 @@ application_gateways = {
 
 kubernetes_clusters = {
   aks1 = {
-    ingress_application_gateway_name = "satya-aks-appgw"
-    resource_group_name              = "satya-aks-rg"
-    container_registry_name         = "satyaaksacrspsingh"
+    ingress_application_gateway_name = "sazsatyaprakash-appgw"
+    resource_group_name              = "sazsatyaprakash-rg"
+    container_registry_name         = "sazsatyaprakashacr"
     acr_pull_role_name               = "AcrPull"
     skip_aad_check                   = true
-    name                             = "satya-aks-aks"
-    location                         = "east us"
-    dns_prefix                       = "satya-aks"
+    name                             = "sazsatyaprakash-aks"
+    location                         = "West Europe"
+    dns_prefix                       = "sazsatyaprakash-aksdnsprefix"
     kubernetes_version               = "1.32.5"
     default_node_pool = {
       name                 = "default"
       node_count           = 1
-      vm_size              = "standard_a2_v2"
+      vm_size              = "Standard_D8ds_v5"
       max_pods             = 80
       auto_scaling_enabled = true
       min_count            = 1
@@ -141,9 +141,9 @@ kubernetes_clusters = {
 
 mssql_servers = {
   mssql1 = {
-    name                         = "satya-aksmssqlserver007"
-    resource_group_name          = "satya-aks-rg"
-    location                     = "east us"
+    name                         = "sazsatyaprakash-aksdnsprefixmssqlserver007"
+    resource_group_name          = "sazsatyaprakash-rg"
+    location                     = "West Europe"
     version                      = "12.0"
     administrator_login          = "aksclustersjs"
     administrator_login_password = "neton@!#5657558"
@@ -152,9 +152,9 @@ mssql_servers = {
 
 mssql_databases = {
   mysqldb1 = {
-    name           = "satya-aksmssqldb007"
-    resource_group_name = "satya-aks-rg"
-    server_name    = "satya-aksmssqlserver007"
+    name           = "sazsatyaprakash-aksdnsprefixmssqldb007"
+    resource_group_name = "sazsatyaprakash-rg"
+    server_name    = "sazsatyaprakash-aksdnsprefixmssqlserver007"
     collation      = "SQL_Latin1_General_CP1_CI_AS"
     license_type   = "LicenseIncluded"
     max_size_gb   = 2
