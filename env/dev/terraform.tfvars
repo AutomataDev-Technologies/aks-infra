@@ -145,8 +145,8 @@ mssql_servers = {
     resource_group_name          = "satya-aks-rg"
     location                     = "east us"
     version                      = "12.0"
-    administrator_login          = "satya"
-    administrator_login_password = "Satya@834068"
+    administrator_login          = "aksclustersjs"
+    administrator_login_password = "neton@!#5657558"
   }
 }
 
@@ -161,4 +161,5 @@ mssql_databases = {
     sku_name      = "S0"
     enclave_type  = "VBS"
   }
+
 }
