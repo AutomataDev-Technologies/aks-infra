@@ -134,7 +134,7 @@ kubernetes_clusters = {
     }
     network_profile = {
       network_plugin = "azure"
-      network_policy = "calico"
+      network_policy = "azure"
     }
   }
 }
@@ -163,3 +163,4 @@ mssql_databases = {
   }
 
 }
+
