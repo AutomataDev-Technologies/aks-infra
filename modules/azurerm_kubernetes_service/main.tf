@@ -1,8 +1,8 @@
-# data "azurerm_application_gateway" "dataappgateway" {
-#   for_each = var.kubernetes_clusters
-#   name                = each.value.ingress_application_gateway_name
-#   resource_group_name = each.value.resource_group_name
-# }
+data "azurerm_application_gateway" "dataappgateway" {
+  for_each = var.kubernetes_clusters
+  name                = each.value.ingress_application_gateway_name
+  resource_group_name = each.value.resource_group_name
+}
 
 data "azurerm_container_registry" "datacontainerregistry" {
   for_each = var.kubernetes_clusters
@@ -31,15 +31,17 @@ resource "azurerm_kubernetes_cluster" "AKS" {
   identity {
     type = each.value.identity.type
   }
+  
+  
 
   network_profile {
     network_plugin = each.value.network_profile.network_plugin
     network_policy = each.value.network_profile.network_policy
   }
 
-  # ingress_application_gateway {
-  #   gateway_id = data.azurerm_application_gateway.dataappgateway[each.key].id
-  # }
+  ingress_application_gateway {
+    gateway_id = data.azurerm_application_gateway.dataappgateway[each.key].id
+  }
 
   tags = var.tags
 }
