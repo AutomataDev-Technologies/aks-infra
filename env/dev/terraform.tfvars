@@ -4,10 +4,16 @@ resource_groups = {
   location = "West Europe"
   }
 
-    rg2 = {
-  name     = "sazsatyaprakash-rg2"
+  #   rg2 = {
+  # name     = "sazsatyaprakash-rg2"
+  # location = "West Europe"
+  # }
+
+      rg3 = {
+  name     = "sazsatyaprakash-rg3"
   location = "West Europe"
   }
+
 }
 
 
