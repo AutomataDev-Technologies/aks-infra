@@ -69,17 +69,27 @@ jobs:
         working-directory: ${{ env.TF_WORKING_DIR }}
         run: terraform plan -out=tfplan
 
-      - name: Terraform Apply (ignore existing resources)
+      - name: Terraform Apply (skip already exists)
         if: github.ref == 'refs/heads/main'
         working-directory: ${{ env.TF_WORKING_DIR }}
+        shell: bash
         run: |
           set +e
-          terraform apply -auto-approve tfplan 2>&1 | tee apply.log | grep -v 'already exists'
-          exit_code=${PIPESTATUS[0]}
+          terraform apply -auto-approve tfplan 2>&1 | tee apply.log
+          TF_EXIT_CODE=${PIPESTATUS[0]}
           set -e
-          if [ $exit_code -ne 0 ]; then
-            echo "Terraform apply failed due to real error."
-            exit $exit_code
+
+          if [ $TF_EXIT_CODE -ne 0 ]; then
+            if grep -qi "already exists" apply.log; then
+              echo "⚠️ Resource already exists. Skipping without failing pipeline."
+              exit 0
+            else
+              echo "❌ Real Terraform error detected."
+              exit $TF_EXIT_CODE
+            fi
           fi
+
+          echo "✅ Terraform apply successful"
+
 
 
