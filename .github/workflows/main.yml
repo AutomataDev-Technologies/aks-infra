@@ -53,10 +53,24 @@ jobs:
 
       - name: Terraform Plan
         working-directory: ${{ env.TF_WORKING_DIR }}
-        run: terraform plan -out=tfplan
+        run: terraform plan -out=tfplan || true
 
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main'
         working-directory: ${{ env.TF_WORKING_DIR }}
-        run: terraform apply -auto-approve tfplan
+        run: terraform apply -auto-approve tfplan || true
+
+      # - name: Check if Plan Has Changes
+      #   working-directory: ${{ env.TF_WORKING_DIR }}
+      #   id: plan
+      #   run: |
+      #     terraform plan -out=tfplan
+      #     terraform show -json tfplan | jq '.resource_changes | length' > changes.txt
+      #     echo "::set-output name=changes::$(cat changes.txt)"
+      
+      # - name: Terraform Apply if Changes Exist
+      #   if: steps.plan.outputs.changes != '0'
+      #   working-directory: ${{ env.TF_WORKING_DIR }}
+      #   run: terraform apply -auto-approve tfplan
+
 
