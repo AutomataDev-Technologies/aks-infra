@@ -1,0 +1,121 @@
+name: aksinfra
+
+on:
+  workflow_dispatch:
+
+  schedule:
+    - cron: "30 4 * * *"    # 10:00 AM IST → CREATE
+    - cron: "30 16 * * *"   # 10:00 PM IST → DESTROY
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  TF_WORKING_DIR: ./env/dev/
+  STORAGE_RG: "satya-rg"
+  STORAGE_ACCOUNT: "satyastoghf"
+  CONTAINER_NAME: "container"
+  STATE_FILE: "aksinfra.tfstate"
+
+jobs:
+
+  # =========================
+  # CREATE JOB (10 AM IST)
+  # =========================
+  aksinfra-create:
+    name: Create AKS Infrastructure
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' || github.event.schedule == '30 4 * * *'
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Azure Login (OIDC)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        run: |
+          terraform init \
+            -backend-config="resource_group_name=${{ env.STORAGE_RG }}" \
+            -backend-config="storage_account_name=${{ env.STORAGE_ACCOUNT }}" \
+            -backend-config="container_name=${{ env.CONTAINER_NAME }}" \
+            -backend-config="key=${{ env.STATE_FILE }}"
+
+      - name: Terraform Validate
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        run: terraform validate
+
+      - name: Terraform Refresh State
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        run: terraform apply -refresh-only -auto-approve
+
+      - name: Terraform Plan
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        run: terraform plan -out=tfplan
+
+      - name: Terraform Apply (skip already exists)
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        shell: bash
+        run: |
+          set +e
+          terraform apply -auto-approve tfplan 2>&1 | tee apply.log
+          TF_EXIT_CODE=${PIPESTATUS[0]}
+          set -e
+
+          if [ $TF_EXIT_CODE -ne 0 ]; then
+            if grep -qi "already exists" apply.log; then
+              echo "⚠️ Resource already exists. Skipping."
+              exit 0
+            else
+              echo "❌ Real Terraform error."
+              exit $TF_EXIT_CODE
+            fi
+          fi
+
+          echo "✅ Terraform create successful"
+
+
+  # =========================
+  # DESTROY JOB (10 PM IST)
+  # =========================
+  aksinfra-destroy:
+    name: Destroy AKS Infrastructure
+    runs-on: ubuntu-latest
+    if: github.event.schedule == '30 16 * * *'
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Azure Login (OIDC)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        run: |
+          terraform init \
+            -backend-config="resource_group_name=${{ env.STORAGE_RG }}" \
+            -backend-config="storage_account_name=${{ env.STORAGE_ACCOUNT }}" \
+            -backend-config="container_name=${{ env.CONTAINER_NAME }}" \
+            -backend-config="key=${{ env.STATE_FILE }}"
+
+      - name: Terraform Destroy
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        run: terraform destroy -auto-approve
