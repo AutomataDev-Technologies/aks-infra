@@ -3,16 +3,6 @@ resource_groups = {
   name     = "sazsatyaprakash-rg"
   location = "West Europe"
   }
-
-  rg2 = {
-  name     = "sazsatyaprakash-rg4"
-  location = "West Europe"
-  }
-
-  rg3 = {
-  name     = "sazsatyaprakash-rg3"
-  location = "West Europe"
-  }
 }
 
 
@@ -173,6 +163,7 @@ mssql_databases = {
   }
 
 }
+
 
 
 
