@@ -46,6 +46,9 @@ jobs:
       - name: Terraform Validate
         working-directory: ${{ env.TF_WORKING_DIR }}
         run: terraform validate
+        
+      - name: Terraform Refresh
+        run: terraform apply -refresh-only -auto-approve
 
       - name: Terraform Plan
         working-directory: ${{ env.TF_WORKING_DIR }}
