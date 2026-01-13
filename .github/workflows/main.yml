@@ -60,10 +60,10 @@ jobs:
       #   working-directory: ${{ env.TF_WORKING_DIR }}
       #   run: terraform apply -auto-approve tfplan || true
 
-      - name: Terraform Refresh State
-        working-directory: ${{ env.TF_WORKING_DIR }}
-        run: |
-          terraform apply -refresh-only -auto-approve
+      # - name: Terraform Refresh State
+      #   working-directory: ${{ env.TF_WORKING_DIR }}
+      #   run: |
+      #     terraform apply -refresh-only -auto-approve
 
       - name: Terraform Plan
         working-directory: ${{ env.TF_WORKING_DIR }}
