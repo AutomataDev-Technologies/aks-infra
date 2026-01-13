@@ -3,15 +3,16 @@ name: aksinfra
 on:
   workflow_dispatch:
 
-  # schedule:
-  #   - cron: "30 4 * * *"    # 10:00 AM IST → CREATE
-  #   - cron: "30 16 * * *"   # 10:00 PM IST → DESTROY
+  schedule:
+    # - cron: "30 4 * * *"    # 10:00 AM IST → CREATE
+    - cron: "40 10 * * *"   # 04:10 PM IST
+    - cron: "30 16 * * *"   # 10:00 PM IST → DESTROY
   # timezone: Asia/Kolkata
 
-  schedule:
-  - cron: "0 10 * * *"     # 10:00 AM IST → CREATE
-  - cron: "0 22 * * *"     # 10:00 PM IST → DESTROY
-  timezone: Asia/Kolkata
+  # schedule:
+  # - cron: "0 10 * * *"     # 10:00 AM IST → CREATE
+  # - cron: "0 22 * * *"     # 10:00 PM IST → DESTROY
+  # timezone: Asia/Kolkata
 
 permissions:
   id-token: write
@@ -32,7 +33,7 @@ jobs:
   aksinfra-create:
     name: Create AKS Infrastructure
     runs-on: ubuntu-latest
-    if: github.event_name == 'workflow_dispatch' || github.event.schedule == '30 4 * * *'
+    if: github.event_name == 'workflow_dispatch' || github.event.schedule == '40 10 * * *'
 
     steps:
       - name: Checkout Code
